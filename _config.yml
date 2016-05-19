@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: Karl's Notes
 subtitle:
-description: "If you can think differently,<br>you can act differently."
+description: "If you can think differently, you can act differently. Just do IT!"
 author: Karl
 language: zh-Hans
 timezone:
@@ -16,6 +16,12 @@ timezone:
 search:
   path: search.xml
   field: post
+
+sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
+
 ################################################################################
 
 # URL
