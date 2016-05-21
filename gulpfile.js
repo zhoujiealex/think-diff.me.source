@@ -11,6 +11,7 @@ var minifycss   = require('gulp-clean-css');
 var uglify      = require('gulp-uglify');
 var htmlmin     = require('gulp-htmlmin');
 var htmlclean   = require('gulp-htmlclean');
+var imagemin    = require('gulp-imagemin');
 var del         = require('del');
 var runSequence = require('run-sequence');
 var Hexo        = require('hexo');
@@ -39,12 +40,12 @@ gulp.task('generate', function(cb){
     });
 })
 
-
 gulp.task('minify-css', function() {
     return gulp.src('./public/**/*.css')
         .pipe(minifycss({compatibility: 'ie8'}))
         .pipe(gulp.dest('./public'));
 });
+
 gulp.task('minify-html', function() {
   return gulp.src('./public/**/*.html')
     .pipe(htmlclean())
@@ -56,15 +57,23 @@ gulp.task('minify-html', function() {
     }))
     .pipe(gulp.dest('./public'))
 });
+
 gulp.task('minify-js', function() {
     return gulp.src('./public/**/*.js')
         .pipe(uglify())
         .pipe(gulp.dest('./public'));
 });
 
+gulp.task('minify-img', function(){
+    return gulp.src('./public/images/*')
+        .pipe(imagemin())
+        .pipe(gulp.dest('./public/images'))
+})
+
 gulp.task('compress', function(cb){
-    runSequence(['minify-html','minify-css','minify-js'],cb);
+    runSequence(['minify-html','minify-css','minify-js', 'minify-img'],cb);
 });
+
 
 //gulp.task('build', ['clean', 'generate', 'compress']);
 gulp.task('build',  function(cb){
@@ -72,4 +81,3 @@ gulp.task('build',  function(cb){
 });
 
 gulp.task('default', [])
-
