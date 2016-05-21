@@ -1,3 +1,9 @@
+-# Refrecnes:
+-# https://zespia.tw/blog/2015/01/21/continuous-deployment-to-github-with-travis/
+-# https://docs.travis-ci.com/user/languages/javascript-with-nodejs
+-# https://github.com/iissnan/theme-next-docs/blob/master/.travis.yml
+-# http://changyuheng.me/2015/when-hexo-static-site-meets-github-pages-and-travis-ci/
+
 language: node_js
 node_js: stable
 
@@ -11,7 +17,6 @@ install:
 
 before_script:
   - npm install -g gulp
-  - npm install gulp
 
 script:
   - gulp build
