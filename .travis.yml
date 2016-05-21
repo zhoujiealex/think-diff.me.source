@@ -11,6 +11,7 @@ install:
 
 before_script:
   - npm install -g gulp
+  - npm link gulp
 
 script:
   - gulp build
