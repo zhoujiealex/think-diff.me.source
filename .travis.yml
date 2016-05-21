@@ -19,7 +19,7 @@ before_script:
   - npm install -g gulp
 
 script:
-  - gulp build-fail
+  - gulp build
 
 after_script:
   - cd public
