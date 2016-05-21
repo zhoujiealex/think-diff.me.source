@@ -94,3 +94,8 @@ test
 ...test raw {{\foo}}
 {% endraw %}
 
+# 更新日志：
+
+2016-05-21 23:40:28 add travis ci to deploy blog automatically, let's test it.
+
+
