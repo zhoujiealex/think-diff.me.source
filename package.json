@@ -6,11 +6,6 @@
     "version": "3.2.0"
   },
   "dependencies": {
-    "del": "^2.2.0",
-    "gulp-clean-css": "^2.0.7",
-    "gulp-htmlclean": "^2.7.6",
-    "gulp-htmlmin": "^2.0.0",
-    "gulp-uglify": "^1.5.3",
     "hexo": "^3.1.1",
     "hexo-deployer-git": "^0.1.0",
     "hexo-generator-archive": "^0.1.4",
@@ -27,6 +22,12 @@
     "hexo-server": "^0.2.0"
   },
   "devDependencies": {
+    "del": "^2.2.0",
+    "gulp-clean-css": "^2.0.7",
+    "gulp-htmlclean": "^2.7.6",
+    "gulp-htmlmin": "^2.0.0",
+    "gulp-uglify": "^1.5.3",
+    "gulp-imagemin": "^3.0.1", 
     "run-sequence": "^1.2.0"
   }
 }
