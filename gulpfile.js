@@ -25,19 +25,16 @@ gulp.task('clean', function () {
 var hexo = new Hexo(process.cwd(), {});
 gulp.task('generate', function(cb){
     hexo.init().then(function(){
-        hexo.call('generate', {watch: false}).then(function(){
-            hexo.exit();
-            cb();
+            return hexo.call('generate', {watch: false});
+        }).then(function(){
+            return hexo.exit();
+        }).then(function(){
+            return cb()
         }).catch(function(err){
             console.log(err);
             hexo.exit(err);
-            cb(err);
+            return cb(err);
         })
-    }).catch(function(err){
-        console.log(err);
-        hexo.exit(err);
-        cb(err);
-    });
 })
 
 gulp.task('minify-css', function() {

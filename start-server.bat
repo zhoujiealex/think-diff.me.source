@@ -1,1 +1,1 @@
-hexo clean & hexo g & gulp & hexo s -p 65432 --debug
+hexo s -p 65432 --debug
