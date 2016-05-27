@@ -6,53 +6,57 @@
 5. https://github.com/iissnan/theme-next-docs/blob/master/.travis.yml
 */
 
-var gulp        = require('gulp');
-var minifycss   = require('gulp-clean-css');
-var uglify      = require('gulp-uglify');
-var htmlmin     = require('gulp-htmlmin');
-var htmlclean   = require('gulp-htmlclean');
-var imagemin    = require('gulp-imagemin');
-var del         = require('del');
+var gulp = require('gulp');
+var minifycss = require('gulp-clean-css');
+var uglify = require('gulp-uglify');
+var htmlmin = require('gulp-htmlmin');
+var htmlclean = require('gulp-htmlclean');
+var imagemin = require('gulp-imagemin');
+var del = require('del');
 var runSequence = require('run-sequence');
-var Hexo        = require('hexo');
+var Hexo = require('hexo');
 
 
-gulp.task('clean', function () {
+gulp.task('clean', function() {
     return del(['public/**/*']);
 });
 
 // generate html with 'hexo generate'
 var hexo = new Hexo(process.cwd(), {});
-gulp.task('generate', function(cb){
-    hexo.init().then(function(){
-            return hexo.call('generate', {watch: false});
-        }).then(function(){
-            return hexo.exit();
-        }).then(function(){
-            return cb()
-        }).catch(function(err){
-            console.log(err);
-            hexo.exit(err);
-            return cb(err);
-        })
+gulp.task('generate', function(cb) {
+    hexo.init().then(function() {
+        return hexo.call('generate', {
+            watch: false
+        });
+    }).then(function() {
+        return hexo.exit();
+    }).then(function() {
+        return cb()
+    }).catch(function(err) {
+        console.log(err);
+        hexo.exit(err);
+        return cb(err);
+    })
 })
 
 gulp.task('minify-css', function() {
     return gulp.src('./public/**/*.css')
-        .pipe(minifycss({compatibility: 'ie8'}))
+        .pipe(minifycss({
+            compatibility: 'ie8'
+        }))
         .pipe(gulp.dest('./public'));
 });
 
 gulp.task('minify-html', function() {
-  return gulp.src('./public/**/*.html')
-    .pipe(htmlclean())
-    .pipe(htmlmin({
-         removeComments: true,
-         minifyJS: true,
-         minifyCSS: true,
-         minifyURLs: true,
-    }))
-    .pipe(gulp.dest('./public'))
+    return gulp.src('./public/**/*.html')
+        .pipe(htmlclean())
+        .pipe(htmlmin({
+            removeComments: true,
+            minifyJS: true,
+            minifyCSS: true,
+            minifyURLs: true,
+        }))
+        .pipe(gulp.dest('./public'))
 });
 
 gulp.task('minify-js', function() {
@@ -61,19 +65,19 @@ gulp.task('minify-js', function() {
         .pipe(gulp.dest('./public'));
 });
 
-gulp.task('minify-img', function(){
+gulp.task('minify-img', function() {
     return gulp.src('./public/images/*')
         .pipe(imagemin())
         .pipe(gulp.dest('./public/images'))
 })
 
-gulp.task('compress', function(cb){
-    runSequence(['minify-html','minify-css','minify-js', 'minify-img'],cb);
+gulp.task('compress', function(cb) {
+    runSequence(['minify-html', 'minify-css', 'minify-js', 'minify-img'], cb);
 });
 
 
 //gulp.task('build', ['clean', 'generate', 'compress']);
-gulp.task('build',  function(cb){
+gulp.task('build', function(cb) {
     runSequence('clean', 'generate', 'compress', cb)
 });
 
