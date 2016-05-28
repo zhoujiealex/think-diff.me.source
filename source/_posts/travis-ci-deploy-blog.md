@@ -63,7 +63,7 @@ CI(Continuous Integration)翻译为持续集成。Travis CI是一个提供持续
 有了CI，你可以只提交post文件里单独的md文件即可，很快很爽，谁用谁知道。
 
 ## 优点4：bigger than bigger<a id="build-icon"></a>
-![build icon](https://api.travis-ci.com/zhoujiealex/think-diff.me.source.svg?token=9BJg6qgmazAszMMZZ7d6&branch=master)
+![build icon](/images/travis-ci-deploy-blog/passing.svg)
 
 你的项目Readme里面可以显示CI build图标，很酷有没有？
 另外通过设置，可以在当build失败时自动发邮件提醒你。
