@@ -49,8 +49,7 @@ CI(Continuous Integration)翻译为持续集成。Travis CI是一个提供持续
 的确, 想用TravisCI来自动部署Hexo博客程序，需要不少设置（瞎折腾），为了给大伙信心，列举一些优点：
 
 ## 优点1：直接在线编辑文件，立即生效
-假设你已经发表了一篇文章，过了几天你在朋友机器上浏览发现有几个明显的错别字，对于有强迫症的，这是不能容忍的。
-但你手头又没有完整的hexo+nodejs+git的开发环境，重新下载git，node，hexo配置会花费不少时间，特别不划算。
+假设你已经发表了一篇文章，过了几天你在朋友机器上浏览发现有几个明显的错别字，对于有强迫症的，这是不能容忍的。 但你手头又没有完整的hexo+nodejs+git的开发环境，重新下载git，node，hexo配置会花费不少时间，特别不划算。
 
 如果按照这篇完整折腾完，你可以直接用浏览器访问github个人项目仓库，直接编辑那篇post的原md文件，前后2分钟改完。 稍等片刻，你的博客就自动更新了。
 
@@ -104,8 +103,7 @@ CI(Continuous Integration)翻译为持续集成。Travis CI是一个提供持续
 1. 准备Travis CI账号, 传送门：[public项目](https://travis-ci.org/), [private项目](https://travis-ci.com/), 在登陆成功后，可以看到自己的Github项目，然后把开关打开，会自动hook到Github。
 2. 准备Github Personal Access Token。在Github的[setting页面](https://github.com/settings/profile)，左侧面板选择[Personal access tokens](https://github.com/settings/tokens), 右上角点击`Generate new token`。生成token时候需要确定访问scope，这里我们选择第一个`repo`即可，参见[完整scope介绍](https://developer.github.com/v3/oauth/#scopes)。**重要**：生成的token只有第一次可见，一定要保存下来备用。
 ![access token](/images/travis-ci-deploy-blog/access-token.png)
-3. 准备[Travis命令行工具](https://github.com/travis-ci/travis.rb)，需要依赖ruby环境。对于Windows环境，可以使用这里
-的[安装包](http://rubyinstaller.org/downloads/)，安装完成后可用`ruby -v`检查。
+3. 准备[Travis命令行工具](https://github.com/travis-ci/travis.rb)，需要依赖ruby环境。对于Windows环境，可以使用这里的[安装包](http://rubyinstaller.org/downloads/)，安装完成后可用`ruby -v`检查。
 安装命令行工具，参考[这里官方文档](https://github.com/travis-ci/travis.rb#installation)：
 
         $ gem install travis -v 1.8.2 --no-rdoc --no-ri
@@ -154,7 +152,11 @@ CI(Continuous Integration)翻译为持续集成。Travis CI是一个提供持续
 完整`gulpfile.js`，参考[这个gist](https://gist.github.com/zhoujiealex/4d926889b02b85d4d8d73f036ef728eb).
 唯一的魔法，就是其中调用Hexo API去generate public文件的部分，参考[Hexo API](https://hexo.io/api/), 语法是hexo使用的[bluebird](https://github.com/petkaantonov/bluebird)的Promise写法，感兴趣具体可自行谷歌。
 
-最后上一张，点击上面[build那个icon](#build-icon)时候，看到的后台travis的build log，如果出错就需要查看这里。
+我使用的[package.json](https://gist.github.com/zhoujiealex/3259ca61efdb12bbdf83aea99d9ff705)，如果想使用我的`gulpfile.js`需要用`npm install`安装里面的module·
+
+配置完成后，以后当你本地编辑完md文件后，只需要运行`git push orgin master`，推送代码到Github就会触发自动Travis CI 自动生成build，部署新的文章。
+
+最后上一张，点击上面[build那个icon](#build-icon)时候，看到的后台Travis CI的build log，如果出错就需要查看这里。
 
 ![travis ci build log](/images/travis-ci-deploy-blog/build-success.png)
 
