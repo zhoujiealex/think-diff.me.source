@@ -147,12 +147,12 @@ CI(Continuous Integration)翻译为持续集成。Travis CI是一个提供持续
 
 # 完整配置文件
 
-完整`.travis.yml`，参考[这个gist](https://gist.github.com/zhoujiealex/787870ec64e774a1ac3d5e17e7e0b23c)，里面设置了邮件通知，启用node module cache等。主要是环境变量`GH_Token` 和 `GIT_PAGE_REF` 使用方式。
+完整`.travis.yml`，参考[这个gist](https://gist.github.com/zhoujiealex/787870ec64e774a1ac3d5e17e7e0b23c)(翻不了墙的[看这里](/files/travis-ci-deploy-blog/travis_yml.txt))，里面设置了邮件通知，启用node module cache等。主要是环境变量`GH_Token` 和 `GIT_PAGE_REF` 使用方式。
 
-完整`gulpfile.js`，参考[这个gist](https://gist.github.com/zhoujiealex/4d926889b02b85d4d8d73f036ef728eb).
+完整`gulpfile.js`，参考[这个gist](https://gist.github.com/zhoujiealex/4d926889b02b85d4d8d73f036ef728eb)(翻不了墙的[看这里](/files/travis-ci-deploy-blog/gulpfile_js.txt))。
 唯一的魔法，就是其中调用Hexo API去generate public文件的部分，参考[Hexo API](https://hexo.io/api/), 语法是hexo使用的[bluebird](https://github.com/petkaantonov/bluebird)的Promise写法，感兴趣具体可自行谷歌。
 
-我使用的[package.json](https://gist.github.com/zhoujiealex/3259ca61efdb12bbdf83aea99d9ff705)，如果想使用我的`gulpfile.js`需要用`npm install`安装里面的module·
+我使用的[package.json](https://gist.github.com/zhoujiealex/3259ca61efdb12bbdf83aea99d9ff705)(翻不了墙的[看这里](/files/travis-ci-deploy-blog/package_json.txt))，如果想使用我的`gulpfile.js`需要用`npm install`安装里面的module。
 
 配置完成后，以后当你本地编辑完md文件后，只需要运行`git push orgin master`，推送代码到Github就会触发自动Travis CI 自动生成build，部署新的文章。
 
