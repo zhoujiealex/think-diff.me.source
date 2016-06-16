@@ -37,9 +37,9 @@ CI(Continuous Integration)翻译为持续集成。Travis CI是一个提供持续
 
 目前有两个站点:
 
-1.[Travis.org](https://travis-ci.com/) 对于所有public项目完全免费
+1.[Travis.org](https://travis-ci.org/) 对于所有public项目完全免费
 
-2.[Travics.com](https://travis-ci.org/) 只针对private项目，提供更多一些额外功能，如cache，并行build个数
+2.[Travics.com](https://travis-ci.com/) 只针对private项目，提供更多一些额外功能，如cache，并行build个数
 
 两个站点只能看到各自的项目，不能通用。
 
