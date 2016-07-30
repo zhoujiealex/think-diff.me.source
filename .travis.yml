@@ -16,6 +16,9 @@ install:
   - npm install gulp
   - npm install
 
+before_script:
+  - git submodule update --remote --merge
+
 script:
   - gulp build
 
