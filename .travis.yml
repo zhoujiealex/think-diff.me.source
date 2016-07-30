@@ -13,10 +13,11 @@ cache:
 
 
 install:
+  - npm install gulp
   - npm install
 
 before_script:
-  - npm install -g gulp
+  - git submodule update --remote --merge
 
 script:
   - gulp build
