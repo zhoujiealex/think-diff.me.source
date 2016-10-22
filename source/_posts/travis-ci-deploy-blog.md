@@ -1,5 +1,7 @@
 ---
 title: 用Travis CI自动部署Hexo博客
+permalink_url_parent: 2016
+permalink_url: 05/28/travis-ci-deploy-blog
 comments: true
 tags:
   - hexo

@@ -81,4 +81,4 @@ gulp.task('build', function(cb) {
     runSequence('clean', 'generate', 'compress', cb)
 });
 
-gulp.task('default', [])
+gulp.task('default', ['build'])

@@ -24,11 +24,12 @@ baidusitemap:
 
 ################################################################################
 
-# URL
+# URL # https://hexo.io/zh-cn/docs/permalinks.html
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://think-diff.me
 root: /
-permalink: :year/:month/:day/:title/
+# permalink: :year/:month/:day/:title/
+permalink: :permalink_url_parent/:permalink_url/   # 为了兼容老的link
 permalink_defaults:
 
 # Directory
@@ -42,8 +43,8 @@ i18n_dir: :lang
 skip_render:
 
 # Writing
-new_post_name: :title.md # File name of new posts
-default_layout: post
+new_post_name: :year-:month-:day-:title.md # File name of new posts https://hexo.io/zh-cn/docs/writing.html
+default_layout: draft
 titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
 filename_case: 0
@@ -61,7 +62,12 @@ highlight:
 # Category & Tag
 default_category: uncategorized
 category_map:
+  测试: test
+  学习: study
+  生活: life
+  工作: work
 tag_map:
+  测试: test
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date

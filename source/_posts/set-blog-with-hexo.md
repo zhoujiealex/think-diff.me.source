@@ -1,4 +1,7 @@
+---
 title: 用Hexo搭建博客（一）:如何搭建？
+permalink_url_parent: 2014
+permalink_url: 10/27/set-blog-with-hexo
 categories: hexo
 tags:
 - hexo

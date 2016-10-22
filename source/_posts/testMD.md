@@ -1,4 +1,7 @@
+---
 title: testMD
+permalink_url_parent: 2014
+permalink_url: 10/27/testMD
 date: 2014-10-27 11:05:59
 tags: test
 toc: true
