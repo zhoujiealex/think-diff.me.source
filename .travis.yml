@@ -13,6 +13,7 @@ env:
   - GIT_PAGE_REF: github.com/zhoujiealex/zhoujiealex.github.io.git
   - GIT_SSH_PAGE_REF: git@github.com:zhoujiealex/zhoujiealex.github.io.git
   - GIT_SSH_CODING_NET: git@git.coding.net:thinkdiffme/thinkdiffme.git
+  - GIT_SSH_CODING_NET_KARLZHOU: git@git.coding.net:thinkdiffme/www.karlzhou.com.git
   - secure: cNeTjYVP4NVPFvQRqOGb9TAtUtLbc3ej1yfNTu7GgVVqc3aSfrvKXCjYGdRzBmXmsk+CPiYIc3IqckOXs5teGef8Ri/W2xenaWgtStxWF2dWNV4cL7/7MvhRlKmWpY+HnV+Egg2ui/arSh4QGxk7JbAGQoUjVEG9mKLVjOOlc6Dr6p6YXbh5+2qoSjl6aR338roL34b2Y3EOKaUWjzSyzkzQZUt3Ipnrpe2F4XMEOpze1gaOQpTu8qj1P3siz6yV7s12ht6Bfg6DySBnwPUqYVazMLRc4Mr1+h0Ai3EF64U6JwG8b4KAcCnDHyVV6I9DnxWocJB8eVSIHRgAehLHD0IKTCvf4gGUwNNf+uQ5E7S9z4cENAkx7XsmJ6/oPL2AJaepG+eTVbJDMi/uhr+cs+UmtLfCII3fFTnImS4XY+WgXIqK0hyQCm3Jod1bEjSvOJvbUJ0oMfMY9ZwG8R3uyaKxjJmiP0xrbldyfYwdIm4D7Rqg+IuQQAdYa8L84igIWQewBJ84timeMbyBmMrirIi9sL1unDCc4bSKECYsUw2uvXsi9INLEnE13iT8TZLv/eWWd/rVts+VZd8U/GA7V+HN0qavJU6pdrG1swj4TlLXN7vpfceAG6VKLZAX/jFoj7SlOYHbLK+V0GIn69JgoKfKpWe2vv4WL8Vh7K6xO5g=
 
 addons:
@@ -43,7 +44,8 @@ before_script:
 script:
 - gulp build
 
-after_script:
+#after_script:
+after_success:
 - cd public
 - git init
 - git config user.name "karl"
@@ -53,6 +55,7 @@ after_script:
 - git push --force --quiet "https://${GH_TOKEN}@${GIT_PAGE_REF}" master:master
 #- git push --force --quiet "${GIT_SSH_PAGE_REF}" master:master
 - git push --force --quiet "${GIT_SSH_CODING_NET}" master:master
+- git push --force --quiet "${GIT_SSH_CODING_NET_KARLZHOU}" master:coding-pages
 
 branches:
   only:
