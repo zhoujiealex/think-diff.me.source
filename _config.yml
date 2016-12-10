@@ -26,7 +26,7 @@ baidusitemap:
 
 # URL # https://hexo.io/zh-cn/docs/permalinks.html
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://www.think-diff.me/
+url: http://www.karlzhou.com/
 root: /
 # permalink: :year/:month/:day/:title/
 permalink: :permalink_url_parent/:permalink_url/   # 为了兼容老的link
