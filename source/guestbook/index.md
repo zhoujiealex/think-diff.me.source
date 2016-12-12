@@ -1,5 +1,5 @@
 ---
-title: guestbook
+title:
 date: 2016-05-18 22:08:44
 ---
 
