@@ -10,5 +10,5 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
-Sitemap: http://www.think-diff.me/sitemap.xml
-Sitemap: http://www.think-diff.me/baidusitemap.xml
+Sitemap: https://www.karlzhou.com/sitemap.xml
+Sitemap: https://www.karlzhou.com/baidusitemap.xml
