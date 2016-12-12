@@ -29,7 +29,7 @@ baidusitemap:
 url: https://www.karlzhou.com/
 root: /
 # permalink: :year/:month/:day/:title/
-permalink: :permalink_url_parent/:permalink_url/   # 为了兼容老的link
+permalink: :permalink_url_parent/:permalink_url/   # 为了兼容老的link, default parent is: articles
 permalink_defaults:
 
 # Directory
