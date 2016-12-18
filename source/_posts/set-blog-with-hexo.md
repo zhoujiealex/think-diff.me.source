@@ -4,10 +4,16 @@ permalink_url_parent: 2014
 permalink_url: 10/27/set-blog-with-hexo
 categories: hexo
 tags:
-- hexo
-- TOI
+    - hexo
+    - TOI
 date: 2014-10-27 14:57:30
 updated: 2014-10-28 22:02:00
+keywords:
+    - 静态博客
+    - hexo
+    - markdown
+    - github
+    - coding
 ---
 
 # 前言

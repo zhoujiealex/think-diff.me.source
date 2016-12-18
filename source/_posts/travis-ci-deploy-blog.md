@@ -10,6 +10,13 @@ tags:
   - Node.js
 categories: hexo
 date: 2016-05-28 15:34:49
+keywords:
+    - CI
+    - hexo
+    - 持续集成
+    - gulp
+    - 博客优化
+    - 压缩
 ---
 
 ![Travis Build Flow](/images/travis-ci-deploy-blog/build-flow.png)
