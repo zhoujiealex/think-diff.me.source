@@ -1,0 +1,131 @@
+# This file is generated automatically, maintained by i@karlzhou.com
+# Generated at 2016-12-17 16:57:10 +0800
+
+# rsyslog v5 configuration file
+
+# For more information see /usr/share/doc/rsyslog-*/rsyslog_conf.html
+# If you experience problems, see http://www.rsyslog.com/doc/troubleshoot.html
+
+#### MODULES ####
+
+$ModLoad imuxsock # provides support for local system logging (e.g. via logger command)
+$ModLoad imklog   # provides kernel logging support (previously done by rklogd)
+#$ModLoad immark  # provides --MARK-- message capability
+
+# Provides UDP syslog reception
+#$ModLoad imudp
+#$UDPServerRun 514
+
+$MaxMessageSize 256k                                # 设置最大消息size，默认4k不够用，会被截断
+
+# Provides TCP syslog reception
+$ModLoad imtcp                                      # 1. 加载imtcp模块，开始tcp服务
+$InputTCPServerRun 514
+
+
+#### GLOBAL DIRECTIVES ####
+
+# Use default timestamp format
+$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+
+# File syncing capability is disabled by default. This feature is usually not required,
+# not useful and an extreme performance hit
+#$ActionFileEnableSync on
+
+################################################################################
+$FileOwner karlzhou                 # 指定保存log文件的属性
+$FileGroup karlzhou
+$DirOwner karlzhou
+$DirGroup karlzhou
+$FileCreateMode 0644
+$DirCreateMode 0755
+$Umask 0022
+
+# For karltest
+# IMPORTANT - this template syntax is for rsyslog v5, latest is v8, there're different.
+# http://www.rsyslog.com/doc/v5-stable/configuration/templates.html
+$template KarltestFileFormat,"/Data/logs/karltest/%fromhost-ip%/%syslogtag:F,44:2%-%$YEAR%-%$MONTH%-%$DAY%.log"
+$template KarltestMsgFormat,"%timegenerated% %fromhost-ip% %syslogtag:F,44:2%  %msg:::drop-last-lf%\n"
+if $syslogtag startswith 'karltest' then ?KarltestFileFormat;KarltestMsgFormat
+& ~ # 如果已经写入到log了，后面的不再处理
+# template example
+# For $ROLE$
+#   $template $ROLE$_FileFormat,"/Data/logs/erp/SHORTROLE/%fromhost-ip%/%syslogtag:F,44:2%-%$YEAR%%$MONTH%%$DAY%.log"
+#   if $syslogtag startswith '$ROLE$' then ?$ROLE$_FileFormat;CleanMsgFormat
+#   & ~
+
+$template CleanMsgFormat,"%msg%\n"      # 2.只保存原始消息，不需要时间戳，hostname，tag
+
+################################################################################
+# For gateway
+$template GatewayFileFormat,"/Data/logs/gateway/%fromhost-ip%/%syslogtag:F,44:2%-%$YEAR%%$MONTH%%$DAY%.log"
+if $syslogtag startswith 'gateway' then ?GatewayFileFormat;CleanMsgFormat
+& ~
+
+# For product
+$template productFileFormat,"/Data/logs/product/%fromhost-ip%/%syslogtag:F,44:2%-%$YEAR%%$MONTH%%$DAY%.log"
+if $syslogtag startswith 'product' then ?productFileFormat;CleanMsgFormat
+& ~
+
+# For erp_wms3      # 这里注意 和 下面的tag的顺序， 一定要让长的tag保持在上面，因为他们有共同的前缀
+$template erp_wms3_FileFormat,"/Data/logs/erp/wms3/%fromhost-ip%/%syslogtag:F,44:2%-%$YEAR%%$MONTH%%$DAY%.log"
+if $syslogtag startswith 'erp_wms3' then ?erp_wms3_FileFormat;CleanMsgFormat
+& ~
+
+# For erp_wms
+$template erp_wms_FileFormat,"/Data/logs/erp/wms/%fromhost-ip%/%syslogtag:F,44:2%-%$YEAR%%$MONTH%%$DAY%.log"
+if $syslogtag startswith 'erp_wms' then ?erp_wms_FileFormat;CleanMsgFormat
+& ~
+
+
+################################################################################
+#### RULES ####
+
+# Log all kernel messages to the console.
+# Logging much else clutters up the screen.
+#kern.*                                                 /dev/console
+
+# Log anything (except mail) of level info or higher.
+# Don't log private authentication messages!
+*.info;mail.none;authpriv.none;cron.none;local5.none;local6.none    /var/log/messages
+
+# The authpriv file has restricted access.
+authpriv.*                                              /var/log/secure
+
+# Log all the mail messages in one place.
+mail.*                                                  -/var/log/maillog
+
+
+# Log cron stuff
+cron.*                                                  /var/log/cron
+
+# Everybody gets emergency messages
+*.emerg                                                 *
+
+# Save news errors of level crit and higher in a special file.
+uucp,news.crit                                          /var/log/spooler
+
+# Save boot messages also to boot.log
+local7.*                                                /var/log/boot.log
+
+
+# ### begin forwarding rule ###
+# The statement between the begin ... end define a SINGLE forwarding
+# rule. They belong together, do NOT split them. If you create multiple
+# forwarding rules, duplicate the whole block!
+# Remote Logging (we use TCP for reliable delivery)
+#
+# An on-disk queue is created for this action. If the remote host is
+# down, messages are spooled to disk and sent when it is up again.
+#$WorkDirectory /var/lib/rsyslog # where to place spool files
+#$ActionQueueFileName fwdRule1 # unique name prefix for spool files
+#$ActionQueueMaxDiskSpace 1g   # 1gb space limit (use as much as possible)
+#$ActionQueueSaveOnShutdown on # save messages to disk on shutdown
+#$ActionQueueType LinkedList   # run asynchronously
+#$ActionResumeRetryCount -1    # infinite retries if host is down
+# remote host is: name/ip:port, e.g. 192.168.0.1:514, port optional
+#*.* @@remote-host:514
+# ### end of the forwarding rule ###
+# Finally include all config files in /etc/rsyslog.d. This allows overrides
+# of the default configuration above.
+$IncludeConfig /etc/rsyslog.d/*.conf

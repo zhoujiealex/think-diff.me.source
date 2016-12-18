@@ -1,0 +1,41 @@
+# This file is generated automatically, maintained by i@karlzhou.com
+# Generated at 2016-12-17 12:37:53 +0800
+
+# send to rsyslog server for product
+# /etc/rsyslog.d/*.conf
+
+##########################################################################
+# For product, total 19 files.
+
+$InputFileName  /Data/logs/product/cache-Statistic.log
+$InputFileTag   product,cache-Statistic
+$InputFileSeverity debug
+$InputFileStateFile state_product_cache-Statistic
+$InputFilePersistStateInterval 25000
+$InputFileFacility local5
+$InputRunFileMonitor
+
+$InputFileName  /Data/logs/product/clearcache.log
+$InputFileTag   product,clearcache
+$InputFileSeverity info
+$InputFileStateFile state_product_clearcache
+$InputFilePersistStateInterval 25000
+$InputFileFacility local5
+$InputRunFileMonitor
+
+$InputFileName  /Data/logs/product/consumer-clearcache.log
+$InputFileTag   product,consumer-clearcache
+$InputFileSeverity info
+$InputFileStateFile state_product_consumer-clearcache
+$InputFilePersistStateInterval 25000
+$InputFileFacility local5
+$InputRunFileMonitor
+
+$InputFileName  /Data/logs/product/database-Statistic.log
+$InputFileTag   product,database-Statistic
+$InputFileSeverity debug
+$InputFileStateFile state_product_database-Statistic
+$InputFilePersistStateInterval 25000
+$InputFileFacility local5
+$InputRunFileMonitor
+

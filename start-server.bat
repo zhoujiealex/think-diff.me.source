@@ -1,1 +1,1 @@
-hexo s -p 65432 --debug
+hexo s -p 65432 --draft --debug 
