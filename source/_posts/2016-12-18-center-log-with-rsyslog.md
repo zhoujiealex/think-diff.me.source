@@ -4,10 +4,18 @@ permalink_url_parent: articles
 permalink_url: 日志集中化收集（一）：rsyslog 配置
 comments: true
 tags:
-  - default
-categories: default
+  - Linux
+  - DevOps
+  - Log
+categories: 运维
 date: 2016-12-18 16:55:09
 updated_time: 2016-12-18 16:55:09
+keywords:
+  - 日志集中化
+  - log collect
+  - 日志收集
+  - rsyslog config
+  - rsyslog配置
 ---
 
 
@@ -368,6 +376,20 @@ if $syslogtag startswith 'product' then ?productFileFormat;CleanMsgFormat
 引用官方有关 [MaxMessageSize](http://www.rsyslog.com/doc/v5-stable/configuration/global/index.html) 的描述： 
 >  Note: testing showed that 4k seems to be the typical maximum for UDP based syslog. This is an IP stack restriction. Not always ... but very often. If you go beyond that value, be sure to test that rsyslogd actually does what you think it should do ;) It is highly suggested to use a TCP based transport instead of UDP (plain TCP syslog, RELP). This resolves the UDP stack size restrictions. 
 
+## 如何测试： vim vs echo ?
+
+配置好接收端、发送端rsyslog后，需要验证下是否能正确传送新的log行。
+
+1. echo追加： `echo "dummy message" >> /Data/logs/product/karltest.log`
+2. vim编辑：  ` vim /Data/logs/product/karltest.log `
+
+用vim编辑后，保存会刷新整个文件，导致rsyslog在比较state file的时候，认为全部是新增的行，会在接收端出现重复的log行。
+所以正确测试方法是用 echo 追加的方式。
+
+> Tips: 
+> 发送端：可以配合 watch 来测试： ` watch -n 1 " echo $(date) dummy message >> /Data/logs/product/karltest.log " `
+>  接收端： ` tailf  /Data/logs/karltest/karltest.log `
+
 
 ## 接收端：log行太长，被截断了
 默认大小是2k，大概可以保存1000个中文字符，参考官方说明 [$MaxMessageSize](http://www.rsyslog.com/doc/v5-stable/configuration/global/index.html)， 最小也是2k。
@@ -439,7 +461,7 @@ if $syslogtag startswith 'erp_wms' then ?erp_wms_FileFormat;CleanMsgFormat
 & ~
 ```
 
-- 5.接收端： rsyslog 文件名太长后被截断
+## 接收端： rsyslog 文件名太长后被截断
 
 比如发送端原始文件名tag: `product，cache_status_im_request.log`
 但是到了接收端就截断了： `cache_status_im_re-20161218.log`
