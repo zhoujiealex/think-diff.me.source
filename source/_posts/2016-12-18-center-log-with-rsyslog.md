@@ -1,7 +1,7 @@
 ---
 title: 日志集中化收集（一）：rsyslog 配置
 permalink_url_parent: articles
-permalink_url: 日志集中化收集（一）：rsyslog 配置
+permalink_url: center-log-with-rsyslog
 comments: true
 tags:
   - Linux
