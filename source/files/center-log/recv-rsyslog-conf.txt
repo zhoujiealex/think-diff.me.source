@@ -16,10 +16,10 @@ $ModLoad imklog   # provides kernel logging support (previously done by rklogd)
 #$ModLoad imudp
 #$UDPServerRun 514
 
-$MaxMessageSize 256k                                # ÉèÖÃ×î´óÏûÏ¢size£¬Ä¬ÈÏ4k²»¹»ÓÃ£¬»á±»½Ø¶Ï
+$MaxMessageSize 256k                                # è®¾ç½®æœ€å¤§æ¶ˆæ¯sizeï¼Œé»˜è®¤4kä¸å¤Ÿç”¨ï¼Œä¼šè¢«æˆªæ–­
 
 # Provides TCP syslog reception
-$ModLoad imtcp                                      # 1. ¼ÓÔØimtcpÄ£¿é£¬¿ªÊ¼tcp·şÎñ
+$ModLoad imtcp                                      # 1. åŠ è½½imtcpæ¨¡å—ï¼Œå¼€å§‹tcpæœåŠ¡
 $InputTCPServerRun 514
 
 
@@ -33,7 +33,7 @@ $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
 #$ActionFileEnableSync on
 
 ################################################################################
-$FileOwner karlzhou                 # Ö¸¶¨±£´ælogÎÄ¼şµÄÊôĞÔ
+$FileOwner karlzhou                 # æŒ‡å®šä¿å­˜logæ–‡ä»¶çš„å±æ€§
 $FileGroup karlzhou
 $DirOwner karlzhou
 $DirGroup karlzhou
@@ -47,14 +47,14 @@ $Umask 0022
 $template KarltestFileFormat,"/Data/logs/karltest/%fromhost-ip%/%syslogtag:F,44:2%-%$YEAR%-%$MONTH%-%$DAY%.log"
 $template KarltestMsgFormat,"%timegenerated% %fromhost-ip% %syslogtag:F,44:2%  %msg:::drop-last-lf%\n"
 if $syslogtag startswith 'karltest' then ?KarltestFileFormat;KarltestMsgFormat
-& ~ # Èç¹ûÒÑ¾­Ğ´Èëµ½logÁË£¬ºóÃæµÄ²»ÔÙ´¦Àí
+& ~ # å¦‚æœå·²ç»å†™å…¥åˆ°logäº†ï¼Œåé¢çš„ä¸å†å¤„ç†
 # template example
 # For $ROLE$
 #   $template $ROLE$_FileFormat,"/Data/logs/erp/SHORTROLE/%fromhost-ip%/%syslogtag:F,44:2%-%$YEAR%%$MONTH%%$DAY%.log"
 #   if $syslogtag startswith '$ROLE$' then ?$ROLE$_FileFormat;CleanMsgFormat
 #   & ~
 
-$template CleanMsgFormat,"%msg%\n"      # 2.Ö»±£´æÔ­Ê¼ÏûÏ¢£¬²»ĞèÒªÊ±¼ä´Á£¬hostname£¬tag
+$template CleanMsgFormat,"%msg%\n"      # 2.åªä¿å­˜åŸå§‹æ¶ˆæ¯ï¼Œä¸éœ€è¦æ—¶é—´æˆ³ï¼Œhostnameï¼Œtag
 
 ################################################################################
 # For gateway
@@ -67,7 +67,7 @@ $template productFileFormat,"/Data/logs/product/%fromhost-ip%/%syslogtag:F,44:2%
 if $syslogtag startswith 'product' then ?productFileFormat;CleanMsgFormat
 & ~
 
-# For erp_wms3      # ÕâÀï×¢Òâ ºÍ ÏÂÃæµÄtagµÄË³Ğò£¬ Ò»¶¨ÒªÈÃ³¤µÄtag±£³ÖÔÚÉÏÃæ£¬ÒòÎªËûÃÇÓĞ¹²Í¬µÄÇ°×º
+# For erp_wms3      # è¿™é‡Œæ³¨æ„ å’Œ ä¸‹é¢çš„tagçš„é¡ºåºï¼Œ ä¸€å®šè¦è®©é•¿çš„tagä¿æŒåœ¨ä¸Šé¢ï¼Œå› ä¸ºä»–ä»¬æœ‰å…±åŒçš„å‰ç¼€
 $template erp_wms3_FileFormat,"/Data/logs/erp/wms3/%fromhost-ip%/%syslogtag:F,44:2%-%$YEAR%%$MONTH%%$DAY%.log"
 if $syslogtag startswith 'erp_wms3' then ?erp_wms3_FileFormat;CleanMsgFormat
 & ~

@@ -10,7 +10,7 @@
 
 $ModLoad imuxsock # provides support for local system logging (e.g. via logger command)
 $ModLoad imklog   # provides kernel logging support (previously done by rklogd)
-$ModLoad imfile  # Load the imfile input module                         # 1. ¼ÓÔØimfile
+$ModLoad imfile  # Load the imfile input module                         # 1. åŠ è½½imfile
 #$ModLoad immark  # provides --MARK-- message capability
 #$MarkMessagePeriod  60  # mark messages appear every 1 Minute(s)
 $ModLoad lmregexp
@@ -22,7 +22,7 @@ $SystemLogRateLimitInterval 0
 #$ModLoad imudp
 #$UDPServerRun 514
 
-$MaxMessageSize 256k                                                    # ÉèÖÃ×î´óÏûÏ¢´óĞ¡£¬Ä¬ÈÏ4k²»¹»£¬»á±»½Ø¶Ï
+$MaxMessageSize 256k                                                    # è®¾ç½®æœ€å¤§æ¶ˆæ¯å¤§å°ï¼Œé»˜è®¤4kä¸å¤Ÿï¼Œä¼šè¢«æˆªæ–­
 
 # Provides TCP syslog reception
 #$ModLoad imtcp
@@ -47,7 +47,7 @@ $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
 # Log anything (except mail) of level info or higher.
 # Don't log private authentication messages!
 *.info;mail.none;authpriv.none;cron.none;local5.none;local6.none    /var/log/messages      
-# ºöÂÔµô×Ô¶¨ÒåµÄlocal5£¬local6ÈÕÖ¾ÀàĞÍ£¬±ÜÃâÏûÏ¢ÅÜµ½messagesÎÄ¼ş£¬µ¼ÖÂ±¾µØ´ÅÅÌ±¬µô
+# å¿½ç•¥æ‰è‡ªå®šä¹‰çš„local5ï¼Œlocal6æ—¥å¿—ç±»å‹ï¼Œé¿å…æ¶ˆæ¯è·‘åˆ°messagesæ–‡ä»¶ï¼Œå¯¼è‡´æœ¬åœ°ç£ç›˜çˆ†æ‰
 
 # The authpriv file has restricted access.
 authpriv.*                                              /var/log/secure
@@ -95,7 +95,7 @@ $ActionQueueMaxDiskSpace 5g                 # 5gb space limit (use as much as po
 $ActionQueueSaveOnShutdown on               # save messages to disk on shutdown
 $ActionQueueType LinkedList                 # run asynchronously
 $ActionResumeRetryCount -1                  # infinite retries if host is down
-local5.*,local6.* @@192.168.56.10:514       # ²ÉÓÃTCPĞ­Òé
+local5.*,local6.* @@192.168.56.10:514       # é‡‡ç”¨TCPåè®®
 
 # ### end of the forwarding rule ###
 
@@ -103,7 +103,7 @@ local5.*,local6.* @@192.168.56.10:514       # ²ÉÓÃTCPĞ­Òé
 # of the default configuration above.
 $WorkDirectory /var/lib/rsyslog
 
-$IncludeConfig /etc/rsyslog.d/*.conf        # °üº¬×Ô¶¨ÒåµÄÅäÖÃÎÄ¼ş
+$IncludeConfig /etc/rsyslog.d/*.conf        # åŒ…å«è‡ªå®šä¹‰çš„é…ç½®æ–‡ä»¶
 
 # do not delete this line to guarantee final carriage return
 
