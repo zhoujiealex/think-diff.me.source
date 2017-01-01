@@ -556,7 +556,7 @@ template (name="ForwardFormat" type="string" string="<%PRI%>%TIMESTAMP:::date-rf
 
 请参考： [日志集中化收集（二）：logrotate 配置]()
 
-# 参考链接：
+# 参考链接
 
 1. [rsyslog官方v5版本文档](http://www.rsyslog.com/doc/v5-stable/)
 2. [rsyslog imfile 模块](http://www.rsyslog.com/doc/v5-stable/configuration/modules/imfile.html)
