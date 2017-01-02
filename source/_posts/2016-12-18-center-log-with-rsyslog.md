@@ -30,6 +30,8 @@ keywords:
 2. rsyslog发送端 + logstash接收端 + <后续第三方处理>： 接受到log更新行后，通过logstash简单处理后，可以继续往第三方处理，如放到ElasticSearch，或者放到消息队列Kfaka等
 3. rsyslog发送端 + Splunk： Splunk是商业软件，也是业内用的比较多的方式，价格不菲 
 
+<!-- more -->
+
 基本原理和处理流程都是类似的： 监控本地log文件内容的变化，然后把变化的文件内容发送到远端收集服务上。
 例如常说的[ELKstack](https://www.gitbook.com/book/chenryn/elk-stack-guide-cn/details)（ElasticSearch+Logstash+Kibana）的第一步都是配置rsyslog发送端。
 
@@ -37,9 +39,6 @@ keywords:
 
 本文主要介绍rsyslog发送端、接收端的配置，以及遇到的一些坑。
 
-*友情提醒，文章很长，请自备小板凳。*
-
-<!-- more -->
 
 # rsyslog简介
 

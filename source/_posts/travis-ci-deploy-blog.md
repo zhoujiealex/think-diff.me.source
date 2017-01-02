@@ -34,9 +34,8 @@ keywords:
 5. 浏览器打开`http://localhost:4000/`, 浏览生成文章
 6. 如果满意，即可部署到Github存放page仓库里： `hexo d`
 
-本文主要介绍如何利用TravisCI自动完成第3-6步，同时利用gulp脚本进行html/css/js/images的压缩。
-
 <!-- more -->
+本文主要介绍如何利用TravisCI自动完成第3-6步，同时利用gulp脚本进行html/css/js/images的压缩。
 
 # What is Travis CI?
 
