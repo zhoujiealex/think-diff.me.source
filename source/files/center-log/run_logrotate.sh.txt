@@ -1,0 +1,194 @@
+#!/bin/bash
+# Created by i@karlzhou.com , generated at 2017-01-03 16:20:37 +0800
+# created olddir folder if necessary, then run logroate
+# will save rotated log.gz into olddir
+
+START_TIME=$(date +%s)
+#-------------------------------------------------------------------------------------
+SCRIPT_DIR=''; pushd "$(dirname "$(readlink -f "$BASH_SOURCE")")" > /dev/null && { SCRIPT_DIR=$PWD; popd > /dev/null; }
+FIND_PROG="/bin/find"
+CHOWN_PROG="/bin/chown"
+LOGROTATE_PROG="/usr/sbin/logrotate"
+XARGS_PROG="/usr/bin/xargs"
+YES_PROG="/usr/bin/yes"
+
+LOG_FOLDER="/Data/logs""/"
+KARLTEST_LOGROTATE_HISTORY='/Data/logs/karltest_log_rotate_history.log'
+TEMP_DIR="archived"
+QCLOUD_PATTERN="10.*"
+AWS_PATTERN="172.*"
+DIR_OWNER="karltestlog"
+
+
+run () {
+    local qcloud_res=$( ${FIND_PROG} ${LOG_FOLDER} -type d -name ${QCLOUD_PATTERN})
+    local aws_res=$( ${FIND_PROG} ${LOG_FOLDER} -type d -name ${AWS_PATTERN})
+    local process_cmd=$1
+
+    ${YES_PROG} | clean_dummy_file ${LOG_FOLDER}
+
+    for fpath in ${qcloud_res}; do
+        ${process_cmd} ${fpath}/${TEMP_DIR}
+    done
+
+    for fpath in ${aws_res}; do
+        ${process_cmd} ${fpath}/${TEMP_DIR}
+    done
+}
+
+confirm () {
+    # you can use "/usr/bin/yes | confirm "
+    read -p "$1 (y/N)?:" yes
+    if [ "$yes" == "y" ]; then
+      echo " "
+      return 0
+    else
+       echo "$(date) Cancelled by user. Nothing to do."
+       return 1
+    fi
+}
+
+create_folder () {
+    local fpath=$1
+
+    if [ ! -d ${fpath} ]; then
+        echo "$(date)  creating folder ${fpath} ..."
+        mkdir ${fpath}
+    fi
+
+    if [ $? -eq 0 ]; then
+        chown  ${DIR_OWNER}:${DIR_OWNER} -R ${fpath}
+    fi
+    
+}
+
+remove_folder () {
+    local fpath=$1
+
+    if [ -d ${fpath} ]; then
+        echo "$(date) Try to delete folder ${fpath}, current directory contents:"
+        /bin/ls ${fpath} -l --color=auto
+        confirm "Are you sure to delete"
+        [ $? -eq 0 ] && rm -rf ${fpath}
+    fi
+}
+
+clean_dummy_file () {
+    local check_path=$1'/'
+    #Sample: find /tmp -size  0 -print0 |xargs -0 rm
+    echo "$(date) Try to clean dummy files in folder: ${check_path}"
+    echo "$(date) Dummy files: "
+    local log_pattern="\( -name '*.log' -o -name '*.gz'  \)"
+    local cmd_show="${FIND_PROG} ${check_path} -type f -size 0 ${log_pattern}"
+    local cmd_rm="${FIND_PROG} ${check_path} -type f -size 0 ${log_pattern} -print0 |  ${XARGS_PROG} -0r rm"
+    local dummy_files=$( eval ${cmd_show} )
+    local total_count=$( echo ${dummy_files} | wc -w)
+    confirm "Are you sure to delete these empty/dummy files, total files:  ${total_count}"
+    if [ $? -eq 0 ]; then
+        echo "$(date) Deleting ${total_count} empty/dummy files..."  >> ${KARLTEST_LOGROTATE_HISTORY} 2>&1
+        echo ${dummy_files} >> ${KARLTEST_LOGROTATE_HISTORY} 2>&1
+        eval ${cmd_rm}
+    fi
+}
+
+
+logrotate_run () {
+    if [ ! -f $1 ]; then
+        echo "$(date) Invalid logrotate config, skip rotating!"
+        return 1
+    else
+        echo "$(date) Try to run ${LOGROTATE_PROG}..."
+        ${LOGROTATE_PROG} $1 $2 >> ${KARLTEST_LOGROTATE_HISTORY} 2>&1
+        return $?
+    fi
+}
+
+moveold_one () {
+    # 默认检查比当天日期小的，同时最近1天没有修改过的文件，文件名是*.log和*.gz
+    # find $1 -maxdepth 1 \( -name '*.log' -o -name '*.gz' \) -type f  ! -path '*20161209*' -mtime +0
+    # args:
+    #   check_path: 全路径
+    #   temp_path: 全路径
+    local check_path=$1
+    local temp_path=$2
+    
+    #local today='20161217'
+    local today=$(date +%Y%m%d)
+    local cmd="${FIND_PROG} ${check_path} -maxdepth 1 \( -name '*.log' -o -name '*.gz' \) -type f ! -path '*${today}*' -mtime +0 "
+    local oldfiles=$( eval ${cmd} )
+    
+    if [[ -z "${oldfiles// }" ]]; then
+        echo "$(date) Found 0 matched files under ${check_path}, nothing to do."
+        return 0
+    else
+        local total_count=$( echo ${oldfiles} | wc -w )
+        echo "$(date) Try to move ${total_count} old files to temp folder: ${temp_path}"
+        echo ${oldfiles} | xargs -n1 /bin/ls -lh --color=auto
+        confirm "$(date) Are you sure to move these ${total_count} files?"
+    
+        if [ $? -eq 0 ]; then
+            for ofile in  ${oldfiles}; do
+                echo "$(date) moving file: ${ofile} to ${temp_path}..."
+                mv -f ${ofile} ${temp_path}
+            done
+        fi
+    fi
+}
+
+
+moveold () {
+   # 移动比某一天日期小的所有文件到temp文件夹下。
+    # 移动log文件：判断文件名里时间tag，如20161215，把比今天20161217小两天的全部移走
+    # 方法1： 用ls *.log | grep -v ".*20161217.*" 来找出对应文件
+    # 方法2： 用 find . -name "*.log" -mtime 2 来找出最近修改的，然后排除掉这些
+    # 第一种方法：可以控制文件名匹配格式，因为如果某个log文件被vim 修改过，就不满足第二种的条件。
+    # 第二种方法更加保险，避免文件正在被写入的时候移走。
+    # 所以需要结合两种判断：先找出文件名不是今天日期的（用find找，可以得到全路径），
+    # 然后再在这些文件里过滤出最近1天没有修改的。
+    
+    local qcloud_res=$( ${FIND_PROG} ${LOG_FOLDER} -type d -name ${QCLOUD_PATTERN})
+    local aws_res=$( ${FIND_PROG} ${LOG_FOLDER} -type d -name ${AWS_PATTERN})
+
+    for fpath in ${qcloud_res}; do
+        # 先保证temp folder存在，create_folder
+        create_folder ${fpath}/${TEMP_DIR}
+         ${YES_PROG} | moveold_one ${fpath} ${fpath}/${TEMP_DIR}
+    done
+
+    for fpath in ${aws_res}; do
+        create_folder ${fpath}/${TEMP_DIR}
+         ${YES_PROG} | moveold_one ${fpath} ${fpath}/${TEMP_DIR}
+    done
+}
+
+# $1 - choice
+# $2 - logroate conf file
+# $3 - logroate debug mode
+case "$1" in
+    create)
+        run 'create_folder'
+        logrotate_run $2 $3
+        moveold
+        ;;
+    moveold)
+        $1
+        ;;
+    delete)
+        run 'remove_folder'
+        ;;
+    clean)
+        clean_dummy_file $2
+        ;;
+    *)
+        echo "$(date) Usage: $0 {create|moveold|delete|clean}  [logrotate conf file] [-d]" >&2
+        exit 2
+        ;;
+esac
+
+#-------------------------------------------------------------------------------------
+
+END_TIME=$(date +%s)
+RUN_TIME=$(( $END_TIME - $START_TIME ))
+echo "$(date) Total run time" ${RUN_TIME} "s"
+exit 0
+

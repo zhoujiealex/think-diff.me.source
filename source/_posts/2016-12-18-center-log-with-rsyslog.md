@@ -40,7 +40,7 @@ keywords:
 本文主要介绍rsyslog发送端、接收端的配置，以及遇到的一些坑。
 
 
-# rsyslog简介
+# rsyslog 简介
 
 [rsyslog](http://www.rsyslog.com/) 在Linux上自带，兼容syslog语法，在syslog基础上增加了更多协议的支持，配合额外module插件可以完成很多场景的使用。借用下官网的图片：
 
@@ -72,7 +72,7 @@ V5版本开发于2010年，属于比较旧的版本，最新版本是V8，支持
 后面介绍以V5版本为例，如有不同的，会单独指出。
 
 ## 配置文件介绍
-
+执行文件： `/sbin/rsyslogd`
 主配置文件: `/etc/rsyslog.conf`
 自定义配置文件: `/etc/rsyslog.d/*.conf`
 修改配置文件后，重启服务： `sudo /etc/init.d/rsyslog restart`
@@ -224,7 +224,7 @@ $InputRunFileMonitor
 
 ```
 
-# Rule设置
+# Rule 设置
 
 一条rule的语法格式如： `<Facility>.<Severity>  <Target>`
 例如：
@@ -553,7 +553,7 @@ template (name="ForwardFormat" type="string" string="<%PRI%>%TIMESTAMP:::date-rf
 
 得用另一个Linux自带的脚本 `/usr/sbin/logrotate`, 来配合 rsyslog。
 
-请参考： [日志集中化收集（二）：logrotate 配置]()
+请参考： [日志集中化收集（二）：logrotate 配置](/articles/center-log-with-logrotate/)
 
 # 参考链接
 
