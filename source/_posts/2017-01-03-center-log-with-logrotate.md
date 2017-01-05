@@ -23,6 +23,8 @@ keywords:
   - anacrontab
 ---
 
+![logrtate log](/images/center-log/paille-truck.jpg)
+
 本文接上篇  [日志集中化收集（一）：rsyslog 配置](/articles/center-log-with-rsyslog/)。
 用 rsyslog 收集了上百G的日志后，得用另一个Linux自带的脚本：
  `/usr/sbin/logrotate` 自动的压缩，分割，归档好历史日志。
