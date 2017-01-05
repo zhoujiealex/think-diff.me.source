@@ -68,8 +68,10 @@ category_map:
   生活: Life
   工作: Work
   软件开发: Develop
+  运维: DevOps
 tag_map:
   测试: Test
+  生活: Life
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date
