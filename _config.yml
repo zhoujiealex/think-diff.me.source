@@ -61,15 +61,15 @@ highlight:
 
 
 # Category & Tag
-default_category: develop
+default_category: Develop
 category_map:
-  测试: test
-  学习: study
-  生活: life
-  工作: work
-  软件开发: develop
+  测试: Test
+  学习: Study
+  生活: Life
+  工作: Work
+  软件开发: Develop
 tag_map:
-  测试: test
+  测试: Test
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date

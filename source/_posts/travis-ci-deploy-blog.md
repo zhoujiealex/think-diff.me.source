@@ -4,7 +4,7 @@ permalink_url_parent: 2016
 permalink_url: 05/28/travis-ci-deploy-blog
 comments: true
 tags:
-  - hexo
+  - Hexo
   - 持续集成
   - gulp
   - Node.js
@@ -12,11 +12,12 @@ categories: hexo
 date: 2016-05-28 15:34:49
 keywords:
     - CI
-    - hexo
+    - Hexo
     - 持续集成
     - gulp
     - 博客优化
     - 压缩
+    - blog
 ---
 
 ![Travis Build Flow](/images/travis-ci-deploy-blog/build-flow.png)
