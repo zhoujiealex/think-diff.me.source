@@ -8,7 +8,7 @@ tags:
   - 持续集成
   - gulp
   - Node.js
-categories: hexo
+categories: Blog
 date: 2016-05-28 15:34:49
 keywords:
     - CI
