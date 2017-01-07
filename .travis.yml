@@ -57,7 +57,7 @@ after_success:
 #- git push --force --quiet "${GIT_SSH_CODING_NET}" master:master
 - git push --force --quiet "${GIT_SSH_CODING_NET_KARLZHOU}" master:coding-pages
 # push baidu_urls.txt
-- curl -H 'Content-Type:text/plain' --data-binary @baidu_urls.txt "http://data.zz.baidu.com/urls?site=www.karlzhou.com&token=Den0csVmYZo30ui0"
+- curl -H 'Content-Type:text/plain' --data-binary @baidu_urls.txt "http://data.zz.baidu.com/urls?site=www.karlzhou.com&token=${baidu_submit_token}"
 
 
 branches:
