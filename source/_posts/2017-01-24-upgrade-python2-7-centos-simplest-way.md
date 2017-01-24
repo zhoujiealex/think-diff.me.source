@@ -4,10 +4,16 @@ permalink_url_parent: articles
 permalink_url: upgrade-python2.7-centos-simplest-way
 comments: true
 tags:
-  - default
-categories: default
+  - Python
+  - Linux
+categories: Python
 date: 2017-01-24 17:03:05
 updated_time: 2017-01-24 17:03:05
+keywords:
+  - centos 升级 python 2.7
+  - centos upgrade python 2.7
+  - python 安装 pip
+  - python 升级后 修复 yum
 ---
 
 ![logrtate log](/images/upgrade-python/linux-python-logo.jpg)
