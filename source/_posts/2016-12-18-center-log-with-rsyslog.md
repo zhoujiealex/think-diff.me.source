@@ -512,6 +512,94 @@ template (name="ForwardFormat" type="string" string="<%PRI%>%TIMESTAMP:::date-rf
 
 > 免责声明：由于折腾这个rsyslog太累，最后一条暂时没有Fix，如有需要，请自行测试后再用。
 
+
+*UPDATED @ 2017-01-24*
+这个问题越来越严重，所以必须花时间解决掉。
+
+如下的两个%syslogtag%，由于前32个字符都相同，导致最后日志写到同一个文件 `databas.log` (按照逗号切割后)了。
+
+``` bash
+$InputFileName	/Data/logs/mqorder/order-mq-aws/database-stat.log
+$InputFileTag   erp_mqorder-order-mq-aws,database-stat		# 长度39
+...
+$InputFileName	/Data/logs/mqorder/order-mq-aws/database-timeout.log
+$InputFileTag   erp_mqorder-order-mq-aws,database-timeout   # 长度42
+...
+```
+
+** 解决方法 **：
+在发送端的主配置文件 `/etc/rsyslog.conf`里修改发送规则：
+``` bash
+# ### begin forwarding rule ###
+$template LongTagForwardFormat,"<%PRI%>%TIMESTAMP:::date-rfc3339% %HOSTNAME% %syslogtag%%msg:::sp-if-no-1st-sp%%msg%"
+$WorkDirectory /var/lib/rsyslog # where to place spool files
+$ActionQueueFileName karlzhou_fwdRule           # unique name prefix for spool files
+$ActionQueueMaxDiskSpace 5g                 # 5gb space limit (use as much as possible)
+$ActionQueueSaveOnShutdown on               # save messages to disk on shutdown
+$ActionQueueType LinkedList                 # run asynchronously
+$ActionResumeRetryCount -1                  # infinite retries if host is down
+local5.* @@rsyslog.karlzhou.org:514;LongTagForwardFormat
+
+# ### end of the forwarding rule ###
+```
+其中起作用的就是 `LongTagForwardFormat` 这个模板。
+
+** 解决过程 **：
+
+TL;DR
+
+参考了上面的链接: 官方解释[Sending messages with tags larger than 32 characters](http://www.rsyslog.com/sende-messages-with-tags-larger-than-32-characters/) 和 [tag getting truncated](http://help.papertrailapp.com/discussions/questions/458-tag-getting-truncated.html)。
+
+官方解释里是 5.8.6 的旧的语法，而CentOS6.x Final上自带的是 5.8.10， 语法不一样。
+从官网下载5.8.10的源码: [http://www.rsyslog.com/files/download/rsyslog/rsyslog-5.8.10.tar.gz](http://www.rsyslog.com/files/download/rsyslog/rsyslog-5.8.10.tar.gz)
+
+全文搜索关键字 `%syslogtag`， 最终在如下几个文件找到蛛丝马迹：
+
+- rsyslog-5.8.10/tools/smfwd.c
+- rsyslog-5.8.10/tools/smtradfile.c
+- rsyslog-5.8.10/tools/smtradfwd.c
+- rsyslog-5.8.10/tools/syslogd.c
+
+全文搜索关键字 `ForwardFormat`:
+
+- rsyslog-5.8.10/tools/syslogd.c
+
+``` bash
+/* hardcoded standard templates (used for defaults) */
+static uchar template_DebugFormat[] = "\"Debug line with all properties:\nFROMHOST: '%FROMHOST%', fromhost-ip: '%fromhost-ip%', HOSTNAME: '%HOSTNAME%', PRI: %PRI%,\nsyslogtag '%syslogtag%', programname: '%programname%', APP-NAME: '%APP-NAME%', PROCID: '%PROCID%', MSGID: '%MSGID%',\nTIMESTAMP: '%TIMESTAMP%', STRUCTURED-DATA: '%STRUCTURED-DATA%',\nmsg: '%msg%'\nescaped msg: '%msg:::drop-cc%'\ninputname: %inputname% rawmsg: '%rawmsg%'\n\n\"";
+static uchar template_SyslogProtocol23Format[] = "\"<%PRI%>1 %TIMESTAMP:::date-rfc3339% %HOSTNAME% %APP-NAME% %PROCID% %MSGID% %STRUCTURED-DATA% %msg%\n\"";
+static uchar template_TraditionalFileFormat[] = "=RSYSLOG_TraditionalFileFormat";
+static uchar template_FileFormat[] = "=RSYSLOG_FileFormat";
+static uchar template_ForwardFormat[] = "=RSYSLOG_ForwardFormat";
+static uchar template_TraditionalForwardFormat[] = "=RSYSLOG_TraditionalForwardFormat";
+static uchar template_WallFmt[] = "\"\r\n\7Message from syslogd@%HOSTNAME% at %timegenerated% ...\r\n %syslogtag%%msg%\n\r\"";
+static uchar template_StdUsrMsgFmt[] = "\" %syslogtag%%msg%\n\r\"";
+static uchar template_StdDBFmt[] = "\"insert into SystemEvents (Message, Facility, FromHost, Priority, DeviceReportedTime, ReceivedAt, InfoUnitID, SysLogTag) values ('%msg%', %syslogfacility%, '%HOSTNAME%', %syslogpriority%, '%timereported:::date-mysql%', '%timegenerated:::date-mysql%', %iut%, '%syslogtag%')\",SQL";
+static uchar template_StdPgSQLFmt[] = "\"insert into SystemEvents (Message, Facility, FromHost, Priority, DeviceReportedTime, ReceivedAt, InfoUnitID, SysLogTag) values ('%msg%', %syslogfacility%, '%HOSTNAME%', %syslogpriority%, '%timereported:::date-pgsql%', '%timegenerated:::date-pgsql%', %iut%, '%syslogtag%')\",STDSQL";
+static uchar template_spoofadr[] = "\"%fromhost-ip%\"";
+/* end templates */
+```
+
+正如官网链接所说，源码里 hardcoded 里多个默认模板格式，
+其中我们需要关注的就是 `RSYSLOG_ForwardFormat`, 对应的文件即：`rsyslog-5.8.10/tools/smfwd.c`。
+
+```
+/* smfwd.c
+ * This is a strgen module for the traditional (network) forwarding format.
+ *
+ * Format generated:
+ * "<%PRI%>%TIMESTAMP:::date-rfc3339% %HOSTNAME% %syslogtag:1:32%%msg:::sp-if-no-1st-sp%%msg%"
+ *
+ * NOTE: read comments in module-template.h to understand how this file
+ *       works!
+ *
+ * File begun on 2010-06-01 by RGerhards
+ *
+```
+
+这里，就能找到我们需要的正确的默认格式了, 可以看到 %syslogtag% 截取了前面32个字符，把ForwardFormat规则替换成完整的 %syslogtag% 即可，注意：最大的长度是512。
+
+
 # 接下来......
 
 通过一番设置，我们已经能成功收集若干台线上机器的日志了：
