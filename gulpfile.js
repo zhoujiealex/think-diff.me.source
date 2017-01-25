@@ -86,8 +86,6 @@ gulp.task('compress', function(cb) {
     runSequence(['minify-html', 'minify-css', 'minify-js', 'minify-img-aggressive'], cb);
 });
 
-
-//gulp.task('build', ['clean', 'generate', 'compress']);
 gulp.task('build', function(cb) {
     runSequence('clean', 'generate', 'compress', cb)
 });
